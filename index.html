@@ -321,6 +321,10 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
                 <input type="date" id="inputDate" value="2026-01-04">
             </div>
             <div class="form-group full-width">
+                <label>Invoice Number <span style="font-weight: normal; color: #999;">(Format: 0000x/MMYYYY/AS-TOPM)</span></label>
+                <input type="text" id="inputInvoiceNumber" value="00001/012026/AS-TOPM" placeholder="00001/012026/AS-TOPM">
+            </div>
+            <div class="form-group full-width">
                 <label>Service/Item Name</label>
                 <input type="text" id="inputItemName" value="Building Agents in Enterprise - February Cohort">
             </div>
@@ -360,7 +364,7 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
 
         <div class="invoice-details">
             <div class="invoice-label">Invoice number</div>
-            <div class="invoice-value" id="invoiceNumber">INV/2026/1/XXXXX/XXXXX/XXXXXX</div>
+            <div class="invoice-value" id="invoiceNumber">00001/012026/AS-TOPM</div>
 
             <div class="invoice-label">Invoice date</div>
             <div class="invoice-value" id="invoiceDate">2026-01-04</div>
@@ -456,6 +460,7 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
             const billedEmail = document.getElementById('inputBilledEmail').value;
             const billedPhone = document.getElementById('inputBilledPhone').value;
             const date = document.getElementById('inputDate').value;
+            const invoiceNumber = document.getElementById('inputInvoiceNumber').value;
             const itemName = document.getElementById('inputItemName').value;
             const amount = parseFloat(document.getElementById('inputAmount').value) || 0;
             const discount = parseFloat(document.getElementById('inputDiscount').value) || 0;
@@ -471,11 +476,7 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
             document.getElementById('billedPhone').textContent = billedPhone;
 
             document.getElementById('invoiceDate').textContent = date;
-
-            // Generate invoice number
-            const dateParts = date.split('-');
-            const invNum = `INV/${dateParts[0]}/${parseInt(dateParts[1])}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 999999)}`;
-            document.getElementById('invoiceNumber').textContent = invNum;
+            document.getElementById('invoiceNumber').textContent = invoiceNumber;
 
             document.getElementById('itemName').textContent = itemName;
 
