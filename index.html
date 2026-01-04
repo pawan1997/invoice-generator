@@ -285,6 +285,16 @@
 <body>
     <div class="generator-section">
         <div class="generator-title">Generate Invoice</div>
+
+        <!-- AI Input Section -->
+        <div class="ai-section" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+            <textarea id="aiInput" style="width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-bottom: 10px;" placeholder="Paste invoice details in natural language, e.g.:
+Adithya Joshi, 7715097951, ds.newb.66@gmail.com
+Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
+            <button class="btn btn-primary" id="aiBtn" onclick="parseWithAI()" style="margin-bottom: 10px;">Parse with AI</button>
+            <span id="aiLoading" style="display: none; margin-left: 10px; color: #666;">Parsing...</span>
+        </div>
+
         <div class="form-grid">
             <div class="form-group">
                 <label>Expert Name</label>
@@ -398,6 +408,54 @@
     </div>
 
     <script>
+        async function parseWithAI() {
+            const input = document.getElementById('aiInput').value.trim();
+            if (!input) {
+                alert('Please enter invoice details');
+                return;
+            }
+
+            const btn = document.getElementById('aiBtn');
+            const loading = document.getElementById('aiLoading');
+
+            btn.disabled = true;
+            loading.style.display = 'inline';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Fill form fields with parsed data
+                if (data.expertName) document.getElementById('inputExpertName').value = data.expertName;
+                if (data.expertLink) document.getElementById('inputExpertLink').value = data.expertLink;
+                if (data.billedName) document.getElementById('inputBilledName').value = data.billedName;
+                if (data.billedEmail) document.getElementById('inputBilledEmail').value = data.billedEmail;
+                if (data.billedPhone) document.getElementById('inputBilledPhone').value = data.billedPhone;
+                if (data.date) document.getElementById('inputDate').value = data.date;
+                if (data.itemName) document.getElementById('inputItemName').value = data.itemName;
+                if (data.amount) document.getElementById('inputAmount').value = data.amount;
+                if (data.discount !== undefined) document.getElementById('inputDiscount').value = data.discount;
+
+                // Update invoice display
+                generateInvoice();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error parsing invoice: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
         function generateInvoice() {
             // Get form values
             const expertName = document.getElementById('inputExpertName').value;
