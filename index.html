@@ -329,11 +329,22 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
                 <input type="text" id="inputItemName" value="Building Agents in Enterprise - February Cohort">
             </div>
             <div class="form-group">
-                <label>Amount (INR)</label>
+                <label>Currency</label>
+                <select id="inputCurrency" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 14px; background: #fff;">
+                    <option value="INR" selected>INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="SGD">SGD (S$)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
                 <input type="number" id="inputAmount" value="37500">
             </div>
             <div class="form-group">
-                <label>Discount (INR)</label>
+                <label>Discount</label>
                 <input type="number" id="inputDiscount" value="0">
             </div>
         </div>
@@ -462,6 +473,7 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
             const date = document.getElementById('inputDate').value;
             const invoiceNumber = document.getElementById('inputInvoiceNumber').value;
             const itemName = document.getElementById('inputItemName').value;
+            const currency = document.getElementById('inputCurrency').value;
             const amount = parseFloat(document.getElementById('inputAmount').value) || 0;
             const discount = parseFloat(document.getElementById('inputDiscount').value) || 0;
 
@@ -481,11 +493,11 @@ Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
             document.getElementById('itemName').textContent = itemName;
 
             const finalAmount = amount - discount;
-            document.getElementById('itemRate').textContent = `INR ${amount.toFixed(1)}`;
-            document.getElementById('itemDiscount').textContent = `INR ${discount.toFixed(1)}`;
-            document.getElementById('itemAmount').textContent = `INR ${finalAmount.toFixed(1)}`;
-            document.getElementById('subtotal').textContent = `INR ${finalAmount.toFixed(1)}`;
-            document.getElementById('grandTotal').textContent = `INR ${finalAmount.toFixed(1)}`;
+            document.getElementById('itemRate').textContent = `${currency} ${amount.toFixed(1)}`;
+            document.getElementById('itemDiscount').textContent = `${currency} ${discount.toFixed(1)}`;
+            document.getElementById('itemAmount').textContent = `${currency} ${finalAmount.toFixed(1)}`;
+            document.getElementById('subtotal').textContent = `${currency} ${finalAmount.toFixed(1)}`;
+            document.getElementById('grandTotal').textContent = `${currency} ${finalAmount.toFixed(1)}`;
         }
 
         function downloadPDF() {
