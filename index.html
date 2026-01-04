@@ -35,19 +35,38 @@
             color: #333;
         }
 
-        .generator-textarea {
-            width: 100%;
-            height: 120px;
-            padding: 12px;
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            padding: 10px 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-family: inherit;
             font-size: 14px;
-            resize: vertical;
-            margin-bottom: 15px;
         }
 
-        .generator-textarea:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #1a73e8;
         }
@@ -55,6 +74,7 @@
         .generator-buttons {
             display: flex;
             gap: 10px;
+            margin-top: 10px;
         }
 
         .btn {
@@ -76,11 +96,6 @@
             background: #1557b0;
         }
 
-        .btn-primary:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
         .btn-secondary {
             background: #333;
             color: #fff;
@@ -88,12 +103,6 @@
 
         .btn-secondary:hover {
             background: #555;
-        }
-
-        .loading {
-            display: none;
-            margin-left: 10px;
-            color: #666;
         }
 
         .invoice-container {
@@ -170,34 +179,9 @@
             top: 140px;
         }
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-inner {
-            width: 30px;
-            height: 30px;
-            background: #fff;
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .logo-inner::after {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .logo-img {
+            height: 45px;
+            width: auto;
         }
 
         table {
@@ -290,21 +274,58 @@
                 right: 20px;
             }
         }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="generator-section">
         <div class="generator-title">Generate Invoice</div>
-        <textarea class="generator-textarea" id="invoiceInput" placeholder="Enter invoice details in natural language, e.g.:
-Adithya Joshi, 7715097951, ds.newb.66@gmail.com
-Expert: Ajay Shenoy (https://topmate.io/ajay_shenoy)
-Service: Building Agents in Enterprise - February Cohort
-Amount: 37500
-Date: 04/01/2026"></textarea>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Expert Name</label>
+                <input type="text" id="inputExpertName" value="Ajay Shenoy">
+            </div>
+            <div class="form-group">
+                <label>Expert Profile URL</label>
+                <input type="text" id="inputExpertLink" value="https://topmate.io/ajay_shenoy">
+            </div>
+            <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" id="inputBilledName" value="Adithya Joshi">
+            </div>
+            <div class="form-group">
+                <label>Customer Email</label>
+                <input type="email" id="inputBilledEmail" value="ds.newb.66@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>Customer Phone</label>
+                <input type="text" id="inputBilledPhone" value="7715097951">
+            </div>
+            <div class="form-group">
+                <label>Invoice Date</label>
+                <input type="date" id="inputDate" value="2026-01-04">
+            </div>
+            <div class="form-group full-width">
+                <label>Service/Item Name</label>
+                <input type="text" id="inputItemName" value="Building Agents in Enterprise - February Cohort">
+            </div>
+            <div class="form-group">
+                <label>Amount (INR)</label>
+                <input type="number" id="inputAmount" value="37500">
+            </div>
+            <div class="form-group">
+                <label>Discount (INR)</label>
+                <input type="number" id="inputDiscount" value="0">
+            </div>
+        </div>
         <div class="generator-buttons">
-            <button class="btn btn-primary" id="generateBtn" onclick="generateInvoice()">Generate Invoice</button>
+            <button class="btn btn-primary" onclick="generateInvoice()">Update Invoice</button>
             <button class="btn btn-secondary" onclick="downloadPDF()">Download as PDF</button>
-            <span class="loading" id="loadingText">Generating...</span>
         </div>
     </div>
 
@@ -324,9 +345,15 @@ Date: 04/01/2026"></textarea>
         </div>
 
         <div class="logo-container">
-            <div class="logo">
-                <div class="logo-inner"></div>
-            </div>
+            <svg class="logo-img" viewBox="0 0 653 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="50" fill="#E94B35"/>
+                <path d="M50 15C30.67 15 15 30.67 15 50C15 69.33 30.67 85 50 85C69.33 85 85 69.33 85 50C85 30.67 69.33 15 50 15Z" fill="#E94B35"/>
+                <path d="M50 25C36.19 25 25 36.19 25 50C25 63.81 36.19 75 50 75C63.81 75 75 63.81 75 50C75 36.19 63.81 25 50 25Z" fill="white"/>
+                <path d="M50 35C41.72 35 35 41.72 35 50C35 58.28 41.72 65 50 65C58.28 65 65 58.28 65 50C65 41.72 58.28 35 50 35Z" fill="#E94B35"/>
+                <path d="M75 50L95 35V65L75 50Z" fill="white"/>
+                <path d="M120 25H140V35H155V25H175V75H155V55H140V75H120V25Z" fill="black"/>
+                <text x="120" y="70" font-family="Arial Black, sans-serif" font-size="55" font-weight="900" fill="black">topmate</text>
+            </svg>
         </div>
 
         <div class="invoice-details">
@@ -371,111 +398,38 @@ Date: 04/01/2026"></textarea>
     </div>
 
     <script>
-        const OPENROUTER_API_KEY = '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';
+        function generateInvoice() {
+            // Get form values
+            const expertName = document.getElementById('inputExpertName').value;
+            const expertLink = document.getElementById('inputExpertLink').value;
+            const billedName = document.getElementById('inputBilledName').value;
+            const billedEmail = document.getElementById('inputBilledEmail').value;
+            const billedPhone = document.getElementById('inputBilledPhone').value;
+            const date = document.getElementById('inputDate').value;
+            const itemName = document.getElementById('inputItemName').value;
+            const amount = parseFloat(document.getElementById('inputAmount').value) || 0;
+            const discount = parseFloat(document.getElementById('inputDiscount').value) || 0;
 
-        async function generateInvoice() {
-            const input = document.getElementById('invoiceInput').value.trim();
-            if (!input) {
-                alert('Please enter invoice details');
-                return;
-            }
+            // Update invoice display
+            document.getElementById('expertName').textContent = expertName;
+            const linkEl = document.getElementById('expertLink');
+            linkEl.href = expertLink;
+            linkEl.textContent = expertLink;
 
-            const btn = document.getElementById('generateBtn');
-            const loading = document.getElementById('loadingText');
+            document.getElementById('billedName').textContent = billedName;
+            document.getElementById('billedEmail').textContent = billedEmail;
+            document.getElementById('billedPhone').textContent = billedPhone;
 
-            btn.disabled = true;
-            loading.style.display = 'inline';
+            document.getElementById('invoiceDate').textContent = date;
 
-            try {
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                        'HTTP-Referer': window.location.href,
-                        'X-Title': 'Invoice Generator'
-                    },
-                    body: JSON.stringify({
-                        model: 'google/gemini-2.5-flash',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: `You are an invoice data parser. Extract invoice details from the user input and return ONLY valid JSON (no markdown, no code blocks, just raw JSON) with these fields:
-{
-    "expertName": "Name of the expert/seller",
-    "expertLink": "URL to expert profile (full URL)",
-    "billedName": "Customer name",
-    "billedEmail": "Customer email",
-    "billedPhone": "Customer phone number",
-    "itemName": "Service/product name",
-    "amount": 0,
-    "discount": 0,
-    "date": "YYYY-MM-DD format"
-}
+            // Generate invoice number
+            const dateParts = date.split('-');
+            const invNum = `INV/${dateParts[0]}/${parseInt(dateParts[1])}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 999999)}`;
+            document.getElementById('invoiceNumber').textContent = invNum;
 
-If any field is missing, use reasonable defaults. For date, convert any format to YYYY-MM-DD.`
-                            },
-                            {
-                                role: 'user',
-                                content: input
-                            }
-                        ],
-                        temperature: 0.1
-                    })
-                });
+            document.getElementById('itemName').textContent = itemName;
 
-                const data = await response.json();
-
-                if (data.error) {
-                    throw new Error(data.error.message || 'API error');
-                }
-
-                const content = data.choices[0].message.content;
-                const invoiceData = JSON.parse(content);
-
-                updateInvoice(invoiceData);
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error generating invoice: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                loading.style.display = 'none';
-            }
-        }
-
-        function updateInvoice(data) {
-            if (data.expertName) {
-                document.getElementById('expertName').textContent = data.expertName;
-            }
-            if (data.expertLink) {
-                const linkEl = document.getElementById('expertLink');
-                linkEl.href = data.expertLink;
-                linkEl.textContent = data.expertLink;
-            }
-            if (data.billedName) {
-                document.getElementById('billedName').textContent = data.billedName;
-            }
-            if (data.billedEmail) {
-                document.getElementById('billedEmail').textContent = data.billedEmail;
-            }
-            if (data.billedPhone) {
-                document.getElementById('billedPhone').textContent = data.billedPhone;
-            }
-            if (data.itemName) {
-                document.getElementById('itemName').textContent = data.itemName;
-            }
-            if (data.date) {
-                document.getElementById('invoiceDate').textContent = data.date;
-                // Generate invoice number based on date
-                const dateParts = data.date.split('-');
-                const invNum = `INV/${dateParts[0]}/${parseInt(dateParts[1])}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 99999)}/${Math.floor(Math.random() * 999999)}`;
-                document.getElementById('invoiceNumber').textContent = invNum;
-            }
-
-            const amount = parseFloat(data.amount) || 0;
-            const discount = parseFloat(data.discount) || 0;
             const finalAmount = amount - discount;
-
             document.getElementById('itemRate').textContent = `INR ${amount.toFixed(1)}`;
             document.getElementById('itemDiscount').textContent = `INR ${discount.toFixed(1)}`;
             document.getElementById('itemAmount').textContent = `INR ${finalAmount.toFixed(1)}`;
@@ -486,6 +440,9 @@ If any field is missing, use reasonable defaults. For date, convert any format t
         function downloadPDF() {
             window.print();
         }
+
+        // Initialize invoice on load
+        generateInvoice();
     </script>
 </body>
 </html>
