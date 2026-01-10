@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Generator | Topmate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a962;
+            --gold-light: #e8d5a3;
+            --gold-dark: #a08339;
+            --navy: #1a2942;
+            --navy-light: #2d3f5a;
+            --cream: #faf8f3;
+            --charcoal: #2c2c2c;
+            --topmate-blue: #1a73e8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Generator Form Section */
+        .generator-section {
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .generator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .generator-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: 0.5px;
+        }
+
+        .back-link {
+            color: var(--topmate-blue);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* AI Parser Section */
+        .ai-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 10px;
+            border: 1px solid #e0e7ff;
+        }
+
+        .ai-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-section-title::before {
+            content: "✨";
+        }
+
+        .ai-textarea {
+            width: 100%;
+            height: 90px;
+            padding: 14px;
+            border: 1px solid #d0d7e8;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 12px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .ai-textarea:focus {
+            outline: none;
+            border-color: var(--topmate-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .ai-textarea::placeholder {
+            color: #999;
+        }
+
+        /* Section Dividers */
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Certificate Type Toggle */
+        .type-toggle {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .type-option {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .type-option:hover {
+            border-color: #ccc;
+        }
+
+        .type-option.active {
+            border-color: var(--topmate-blue);
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        .type-option input {
+            display: none;
+        }
+
+        .type-option-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .type-option-desc {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 11px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--topmate-blue);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .cohort-field {
+            display: none;
+        }
+
+        .cohort-field.visible {
+            display: flex;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .signature-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .signature-toggle-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .signature-toggle-btn.active {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+
+        .signature-upload-area {
+            display: none;
+        }
+
+        .signature-upload-area.visible {
+            display: block;
+        }
+
+        .signature-typed-area {
+            display: none;
+        }
+
+        .signature-typed-area.visible {
+            display: block;
+        }
+
+        .upload-zone {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--topmate-blue);
+            background: rgba(26, 115, 232, 0.02);
+        }
+
+        .upload-zone.has-image {
+            border-style: solid;
+            border-color: var(--gold);
+        }
+
+        .upload-zone input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .signature-preview {
+            max-height: 80px;
+            max-width: 250px;
+        }
+
+        .typed-signature-preview {
+            font-family: 'Great Vibes', cursive;
+            font-size: 42px;
+            color: var(--charcoal);
+            min-height: 60px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+            margin-top: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--topmate-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: var(--navy-light);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--navy);
+        }
+
+        .btn-outline:hover {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .generator-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Certificate Preview Container */
+        .certificate-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .certificate-container {
+            width: 1056px;
+            height: 748px;
+            margin: 0 auto;
+            background: var(--cream);
+            position: relative;
+            padding: 0;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+        }
+
+        /* Subtle Background Pattern */
+        .cert-bg-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.4;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(201, 169, 98, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(201, 169, 98, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(201, 169, 98, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cert-bg-pattern::before {
+            content: '';
+            position: absolute;
+            inset: 40px;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 60px,
+                    rgba(201, 169, 98, 0.015) 60px,
+                    rgba(201, 169, 98, 0.015) 61px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 60px,
+                    rgba(201, 169, 98, 0.015) 60px,
+                    rgba(201, 169, 98, 0.015) 61px
+                );
+            pointer-events: none;
+        }
+
+        /* Decorative Border */
+        .cert-border-outer {
+            position: absolute;
+            inset: 12px;
+            border: 3px solid var(--gold);
+            pointer-events: none;
+        }
+
+        .cert-border-inner {
+            position: absolute;
+            inset: 20px;
+            border: 1px solid var(--gold-light);
+            pointer-events: none;
+        }
+
+        /* Corner Ornaments */
+        .corner-ornament {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.6;
+        }
+
+        .corner-ornament::before,
+        .corner-ornament::after {
+            content: '';
+            position: absolute;
+            background: var(--gold);
+        }
+
+        .corner-ornament.top-left { top: 30px; left: 30px; }
+        .corner-ornament.top-right { top: 30px; right: 30px; transform: rotate(90deg); }
+        .corner-ornament.bottom-left { bottom: 30px; left: 30px; transform: rotate(-90deg); }
+        .corner-ornament.bottom-right { bottom: 30px; right: 30px; transform: rotate(180deg); }
+
+        .corner-ornament::before {
+            width: 30px;
+            height: 2px;
+            top: 0;
+            left: 0;
+        }
+
+        .corner-ornament::after {
+            width: 2px;
+            height: 30px;
+            top: 0;
+            left: 0;
+        }
+
+        /* Certificate Content */
+        .cert-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 80px;
+            text-align: center;
+        }
+
+        /* Logo - Centered at top */
+        .cert-logo-section {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cert-logo {
+            height: 58px;
+            opacity: 1;
+        }
+
+        /* Certificate Title - Single elegant title */
+        .cert-title-wrapper {
+            margin-bottom: 12px;
+        }
+
+        .cert-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 52px;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .cert-title-line {
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 20px auto 0;
+        }
+
+        /* Certification Text */
+        .cert-certify-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-style: italic;
+            color: #666;
+            margin: 25px 0 15px;
+        }
+
+        /* Recipient Name */
+        .cert-recipient-wrapper {
+            margin: 10px 0 20px;
+        }
+
+        .cert-recipient {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 52px;
+            font-weight: 700;
+            color: var(--navy);
+            line-height: 1.1;
+        }
+
+        .cert-recipient-line {
+            width: 400px;
+            max-width: 100%;
+            height: 1px;
+            background: var(--gold);
+            margin: 5px auto 0;
+        }
+
+        /* Course Info */
+        .cert-completion-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .cert-course {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--topmate-blue);
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .cert-cohort {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        /* Single Date */
+        .cert-date {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 15px;
+            color: #888;
+            margin: 20px 0;
+        }
+
+        /* Instructor Entry Styles */
+        .instructor-entry {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .instructor-entry:first-child .remove-instructor {
+            display: none;
+        }
+
+        .remove-instructor {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-instructor:hover {
+            background: #cc0000;
+        }
+
+        /* Signature Area - Multiple Instructors */
+        .cert-signatures-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .cert-signature-block {
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .cert-signature-img {
+            max-height: 50px;
+            max-width: 150px;
+            margin-bottom: 5px;
+        }
+
+        .cert-signature-typed {
+            font-family: 'Great Vibes', cursive;
+            font-size: 32px;
+            color: var(--charcoal);
+            margin-bottom: 5px;
+        }
+
+        .cert-signature-line {
+            width: 150px;
+            height: 1px;
+            background: var(--charcoal);
+            margin: 0 auto 8px;
+        }
+
+        .cert-creator-name {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .cert-creator-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* Footer profile links */
+        .cert-profile-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .cert-profile-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            color: var(--topmate-blue);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        .cert-footer {
+            position: absolute;
+            bottom: 35px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .cert-id {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 0.5px;
+        }
+
+        .cert-profile-link {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: var(--topmate-blue);
+            text-decoration: none;
+        }
+
+        /* Stamp Image */
+        .cert-stamp {
+            position: absolute;
+            bottom: 60px;
+            left: 50px;
+        }
+
+        .cert-stamp-img {
+            width: 140px;
+            height: auto;
+            opacity: 0.9;
+        }
+
+        /* SVG Filter for grunge effect */
+        .stamp-filter-svg {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        /* Logo section is now defined above in .cert-logo-section */
+
+        /* Loading State */
+        .loading-spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Print Styles */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            html, body {
+                margin: 0;
+                padding: 0;
+                background: #fff;
+                overflow: hidden;
+                width: 297mm;
+                height: 210mm;
+            }
+
+            .generator-section {
+                display: none !important;
+            }
+
+            .certificate-wrapper {
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+                width: 297mm;
+                height: 210mm;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .certificate-container {
+                box-shadow: none;
+                width: 287mm;
+                height: 200mm;
+                margin: 0 auto;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                transform: none;
+            }
+
+            .cert-content {
+                padding: 40px 60px;
+            }
+
+            .cert-title {
+                font-size: 46px;
+                letter-spacing: 5px;
+            }
+
+            .cert-recipient {
+                font-size: 44px;
+            }
+
+            .cert-course {
+                font-size: 22px;
+            }
+
+            .cert-logo-section {
+                top: 35px;
+            }
+
+            .cert-logo {
+                height: 52px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .type-toggle {
+                flex-direction: column;
+            }
+
+            .generator-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .certificate-wrapper {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-section">
+        <div class="generator-header">
+            <div class="generator-title">Certificate Generator</div>
+            <a href="home.html" class="back-link">
+                <span>←</span> Back to Home
+            </a>
+        </div>
+
+        <!-- AI Parser Section -->
+        <div class="ai-section">
+            <div class="ai-section-title">AI-Powered Auto-Fill</div>
+            <textarea class="ai-textarea" id="aiInput" placeholder="Paste certificate details in natural language, e.g.:
+John Smith completed Building AI Agents course - February 2026 Cohort
+Instructor: Ajay Shenoy (topmate.io/ajay_shenoy)
+8 weeks, completed January 5, 2026"></textarea>
+            <button class="btn btn-primary" id="aiBtn" onclick="parseWithAI()">
+                <span id="aiBtnText">Parse with AI</span>
+                <span class="loading-spinner" id="aiLoading"></span>
+            </button>
+        </div>
+
+        <!-- Certificate Type -->
+        <div class="section-title">Certificate Type</div>
+        <div class="type-toggle">
+            <label class="type-option active" id="typeSelfPaced">
+                <input type="radio" name="certType" value="self-paced" checked onchange="toggleCertType()">
+                <div class="type-option-label">Self-Paced Course</div>
+                <div class="type-option-desc">For on-demand courses completed at learner's pace</div>
+            </label>
+            <label class="type-option" id="typeCohort">
+                <input type="radio" name="certType" value="cohort" onchange="toggleCertType()">
+                <div class="type-option-label">Live Cohort</div>
+                <div class="type-option-desc">For live courses with specific cohort dates</div>
+            </label>
+        </div>
+
+        <!-- Recipient Information -->
+        <div class="section-title">Recipient Information</div>
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>Recipient Full Name</label>
+                <input type="text" id="inputRecipientName" value="John Smith" oninput="generateCertificate()">
+            </div>
+        </div>
+
+        <!-- Course Details -->
+        <div class="section-title">Course Details</div>
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>Course / Program Name</label>
+                <input type="text" id="inputCourseName" value="Building AI Agents in Enterprise" oninput="generateCertificate()">
+            </div>
+            <div class="form-group full-width cohort-field" id="cohortFieldGroup">
+                <label>Cohort Name</label>
+                <input type="text" id="inputCohortName" value="February 2026 Cohort" oninput="generateCertificate()">
+            </div>
+        </div>
+
+        <!-- Creator Information -->
+        <div class="section-title">Creator / Instructors</div>
+        <div id="instructorsContainer">
+            <div class="instructor-entry" data-index="0">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Instructor Name</label>
+                        <input type="text" class="instructor-name" value="Ajay Shenoy" oninput="generateCertificate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="instructor-title" value="Course Instructor" oninput="generateCertificate()">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Topmate Profile URL</label>
+                        <input type="text" class="instructor-url" value="https://topmate.io/ajay_shenoy" oninput="generateCertificate()">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-outline" onclick="addInstructor()" style="margin-top: 10px; padding: 8px 16px; font-size: 13px;">
+            + Add Another Instructor
+        </button>
+
+        <!-- Date -->
+        <div class="section-title">Date</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Certificate Date</label>
+                <input type="date" id="inputDate" value="2026-01-05" oninput="generateCertificate()">
+            </div>
+        </div>
+
+        <!-- Signature Style -->
+        <div class="section-title">Signature Style</div>
+        <div class="signature-section">
+            <div class="signature-toggle">
+                <button class="signature-toggle-btn active" id="sigToggleTyped" onclick="toggleSignatureType('typed')">Typed (Cursive)</button>
+                <button class="signature-toggle-btn" id="sigToggleUpload" onclick="toggleSignatureType('upload')">Upload Image</button>
+            </div>
+            <p style="font-size: 12px; color: #888; margin-top: 10px;">Signatures will use instructor names in cursive style, or you can upload signature images for each.</p>
+        </div>
+
+        <!-- Branding -->
+        <div class="section-title">Branding</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Logo</label>
+                <select id="inputLogoType" onchange="generateCertificate()" style="padding: 11px 14px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 14px;">
+                    <option value="topmate">Topmate</option>
+                    <option value="foundry">TopMate Foundry</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Certificate ID -->
+        <div class="section-title">Certificate ID</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Certificate ID <span style="font-weight: normal; color: #999;">(auto-generated or custom)</span></label>
+                <input type="text" id="inputCertificateId" oninput="generateCertificate()">
+            </div>
+            <div class="form-group" style="justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="regenerateCertificateId()" style="padding: 10px 16px;">Regenerate ID</button>
+            </div>
+        </div>
+
+        <div class="generator-buttons">
+            <button class="btn btn-primary" onclick="generateCertificate()">Update Preview</button>
+            <button class="btn btn-secondary" onclick="downloadPDF()">Download as PDF</button>
+        </div>
+    </div>
+
+    <!-- Certificate Preview -->
+    <div class="certificate-wrapper">
+        <div class="certificate-container" id="certificateContainer">
+            <!-- Background Pattern -->
+            <div class="cert-bg-pattern"></div>
+
+            <!-- Decorative Borders -->
+            <div class="cert-border-outer"></div>
+            <div class="cert-border-inner"></div>
+
+            <!-- Corner Ornaments -->
+            <div class="corner-ornament top-left"></div>
+            <div class="corner-ornament top-right"></div>
+            <div class="corner-ornament bottom-left"></div>
+            <div class="corner-ornament bottom-right"></div>
+
+            <!-- Logo - Centered at top -->
+            <div class="cert-logo-section">
+                <img class="cert-logo" id="certLogo" src="https://res.cloudinary.com/topmate/image/upload/v1767527779/logo-topmate_ljeuh7.png" alt="Topmate">
+            </div>
+
+            <!-- SVG Filter for Grunge Effect -->
+            <svg class="stamp-filter-svg">
+                <defs>
+                    <filter id="grunge-filter" x="-20%" y="-20%" width="140%" height="140%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise"/>
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+                    </filter>
+                </defs>
+            </svg>
+
+            <!-- Stamp Image -->
+            <div class="cert-stamp">
+                <img src="https://res.cloudinary.com/topmate/image/upload/v1768049610/stamp_dij8oe.png" alt="Topmate Stamp" class="cert-stamp-img">
+            </div>
+
+            <!-- Content -->
+            <div class="cert-content">
+                <div class="cert-title-wrapper">
+                    <h1 class="cert-title">Certificate of Completion</h1>
+                    <div class="cert-title-line"></div>
+                </div>
+
+                <div class="cert-certify-text">This is to certify that</div>
+
+                <div class="cert-recipient-wrapper">
+                    <div class="cert-recipient" id="certRecipient">John Smith</div>
+                    <div class="cert-recipient-line"></div>
+                </div>
+
+                <div class="cert-completion-text">has successfully completed the course</div>
+
+                <div class="cert-course" id="certCourse">"Building AI Agents in Enterprise"</div>
+                <div class="cert-cohort" id="certCohort">February 2026 Cohort</div>
+
+                <div class="cert-date" id="certDate">January 5, 2026</div>
+
+                <div class="cert-signatures-container" id="certSignaturesContainer">
+                    <!-- Signatures will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="cert-footer">
+                <div class="cert-id" id="certId">CERT-2026-00001</div>
+                <div class="cert-profile-links" id="certProfileLinks">
+                    <!-- Profile links will be dynamically generated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let signatureType = 'typed';
+        let instructorCount = 1;
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCertificateId();
+            generateCertificate();
+        });
+
+        // Certificate Type Toggle
+        function toggleCertType() {
+            const selfPacedEl = document.getElementById('typeSelfPaced');
+            const cohortEl = document.getElementById('typeCohort');
+            const cohortField = document.getElementById('cohortFieldGroup');
+            const certCohort = document.getElementById('certCohort');
+
+            const isCohort = document.querySelector('input[name="certType"]:checked').value === 'cohort';
+
+            selfPacedEl.classList.toggle('active', !isCohort);
+            cohortEl.classList.toggle('active', isCohort);
+            cohortField.classList.toggle('visible', isCohort);
+
+            if (isCohort) {
+                certCohort.style.display = 'block';
+            } else {
+                certCohort.style.display = 'none';
+            }
+
+            generateCertificate();
+        }
+
+        // Signature Type Toggle
+        function toggleSignatureType(type) {
+            signatureType = type;
+            const uploadBtn = document.getElementById('sigToggleUpload');
+            const typedBtn = document.getElementById('sigToggleTyped');
+
+            uploadBtn.classList.toggle('active', type === 'upload');
+            typedBtn.classList.toggle('active', type === 'typed');
+
+            generateCertificate();
+        }
+
+        // Add new instructor
+        function addInstructor() {
+            instructorCount++;
+            const container = document.getElementById('instructorsContainer');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'instructor-entry';
+            newEntry.dataset.index = instructorCount - 1;
+            newEntry.innerHTML = `
+                <button type="button" class="remove-instructor" onclick="removeInstructor(this)">×</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Instructor Name</label>
+                        <input type="text" class="instructor-name" value="" placeholder="Enter name" oninput="generateCertificate()">
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="instructor-title" value="Co-Instructor" oninput="generateCertificate()">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Topmate Profile URL</label>
+                        <input type="text" class="instructor-url" value="" placeholder="https://topmate.io/username" oninput="generateCertificate()">
+                    </div>
+                </div>
+            `;
+            container.appendChild(newEntry);
+            generateCertificate();
+        }
+
+        // Remove instructor
+        function removeInstructor(btn) {
+            const entry = btn.closest('.instructor-entry');
+            entry.remove();
+            generateCertificate();
+        }
+
+        // Get all instructors data
+        function getInstructorsData() {
+            const entries = document.querySelectorAll('.instructor-entry');
+            const instructors = [];
+            entries.forEach(entry => {
+                const name = entry.querySelector('.instructor-name').value;
+                const title = entry.querySelector('.instructor-title').value;
+                const url = entry.querySelector('.instructor-url').value;
+                if (name) {
+                    instructors.push({ name, title, url });
+                }
+            });
+            return instructors;
+        }
+
+        // Generate Certificate ID
+        function generateCertificateId() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(10000 + Math.random() * 90000);
+            const id = `CERT-${year}-${random}`;
+            document.getElementById('inputCertificateId').value = id;
+        }
+
+        function regenerateCertificateId() {
+            generateCertificateId();
+            generateCertificate();
+        }
+
+        // Format Date
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Extract short profile path
+        function getShortProfileUrl(url) {
+            try {
+                const parsed = new URL(url);
+                return parsed.host + parsed.pathname;
+            } catch {
+                return url.replace(/^https?:\/\//, '');
+            }
+        }
+
+        // Logo URLs
+        const logoUrls = {
+            topmate: 'https://res.cloudinary.com/topmate/image/upload/v1767527779/logo-topmate_ljeuh7.png',
+            foundry: 'https://res.cloudinary.com/topmate/image/upload/v1768048181/topmatefoundry_trnvil.png'
+        };
+
+        // Main Generate Function
+        function generateCertificate() {
+            // Get form values
+            const recipientName = document.getElementById('inputRecipientName').value;
+            const courseName = document.getElementById('inputCourseName').value;
+            const cohortName = document.getElementById('inputCohortName').value;
+            const certDate = document.getElementById('inputDate').value;
+            const certificateId = document.getElementById('inputCertificateId').value;
+            const logoType = document.getElementById('inputLogoType').value;
+            const isCohort = document.querySelector('input[name="certType"]:checked').value === 'cohort';
+            const instructors = getInstructorsData();
+
+            // Update logo
+            const logoEl = document.getElementById('certLogo');
+            logoEl.src = logoUrls[logoType];
+            logoEl.alt = logoType === 'foundry' ? 'TopMate Foundry' : 'Topmate';
+
+            // Update certificate display
+            document.getElementById('certRecipient').textContent = recipientName;
+            document.getElementById('certCourse').textContent = `"${courseName}"`;
+
+            // Cohort display
+            const cohortEl = document.getElementById('certCohort');
+            if (isCohort && cohortName) {
+                cohortEl.textContent = cohortName;
+                cohortEl.style.display = 'block';
+            } else {
+                cohortEl.style.display = 'none';
+            }
+
+            // Date
+            document.getElementById('certDate').textContent = formatDate(certDate);
+
+            // Generate signatures for all instructors
+            const signaturesContainer = document.getElementById('certSignaturesContainer');
+            signaturesContainer.innerHTML = instructors.map(instructor => `
+                <div class="cert-signature-block">
+                    <div class="cert-signature-typed">${instructor.name}</div>
+                    <div class="cert-signature-line"></div>
+                    <div class="cert-creator-name">${instructor.name}</div>
+                    <div class="cert-creator-title">${instructor.title}</div>
+                </div>
+            `).join('');
+
+            // Generate profile links for footer
+            const profileLinksContainer = document.getElementById('certProfileLinks');
+            profileLinksContainer.innerHTML = instructors
+                .filter(i => i.url)
+                .map(instructor => `
+                    <a href="${instructor.url}" class="cert-profile-link">${getShortProfileUrl(instructor.url)}</a>
+                `).join('');
+
+            // Footer
+            document.getElementById('certId').textContent = certificateId;
+        }
+
+        // AI Parser
+        async function parseWithAI() {
+            const input = document.getElementById('aiInput').value.trim();
+            if (!input) {
+                alert('Please enter certificate details');
+                return;
+            }
+
+            const btn = document.getElementById('aiBtn');
+            const btnText = document.getElementById('aiBtnText');
+            const loading = document.getElementById('aiLoading');
+
+            btn.disabled = true;
+            btnText.textContent = 'Parsing...';
+            loading.style.display = 'inline-block';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input, type: 'certificate' })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Fill form fields with parsed data
+                if (data.recipientName) document.getElementById('inputRecipientName').value = data.recipientName;
+                if (data.courseName) document.getElementById('inputCourseName').value = data.courseName;
+                if (data.cohortName) document.getElementById('inputCohortName').value = data.cohortName;
+                if (data.completionDate) document.getElementById('inputDate').value = data.completionDate;
+                else if (data.issueDate) document.getElementById('inputDate').value = data.issueDate;
+
+                // Update first instructor
+                const firstEntry = document.querySelector('.instructor-entry');
+                if (data.creatorName) firstEntry.querySelector('.instructor-name').value = data.creatorName;
+                if (data.creatorProfileUrl) firstEntry.querySelector('.instructor-url').value = data.creatorProfileUrl;
+                if (data.signatureTitle) firstEntry.querySelector('.instructor-title').value = data.signatureTitle;
+
+                // Set certificate type
+                if (data.certificateType === 'cohort') {
+                    document.querySelector('input[name="certType"][value="cohort"]').checked = true;
+                    toggleCertType();
+                } else {
+                    document.querySelector('input[name="certType"][value="self-paced"]').checked = true;
+                    toggleCertType();
+                }
+
+                // Update certificate display
+                generateCertificate();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error parsing certificate: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = 'Parse with AI';
+                loading.style.display = 'none';
+            }
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
