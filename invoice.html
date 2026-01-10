@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .generator-section {
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .generator-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        .generator-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #1a73e8;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .header-section {
+            margin-bottom: 25px;
+        }
+
+        .expert-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .expert-link {
+            color: #1a73e8;
+            text-decoration: underline;
+        }
+
+        .billed-section {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .billed-label {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .billed-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .billed-email,
+        .billed-phone {
+            color: #333;
+        }
+
+        .invoice-details {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .invoice-label {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .invoice-value {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .logo-container {
+            position: absolute;
+            right: 40px;
+            top: 140px;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 2px solid #333;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        thead th:nth-child(2),
+        thead th:nth-child(3),
+        thead th:nth-child(4),
+        thead th:nth-child(5) {
+            text-align: right;
+        }
+
+        tbody td {
+            padding: 15px 8px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        tbody td:nth-child(2),
+        tbody td:nth-child(3),
+        tbody td:nth-child(4),
+        tbody td:nth-child(5) {
+            text-align: right;
+        }
+
+        .item-name {
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .totals-section {
+            margin-top: 20px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            padding: 8px 0;
+        }
+
+        .total-label {
+            width: 200px;
+            text-align: left;
+        }
+
+        .total-value {
+            width: 100px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .grand-total {
+            font-weight: bold;
+        }
+
+        @media print {
+            @page {
+                margin: 15mm;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .generator-section {
+                display: none !important;
+            }
+
+            .invoice-container {
+                box-shadow: none;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .logo-container {
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div class="generator-title" style="margin-bottom: 0;">Generate Invoice</div>
+            <a href="index.html" style="color: #1a73e8; text-decoration: none; font-size: 14px;">← Back to Home</a>
+        </div>
+
+        <!-- AI Input Section -->
+        <div class="ai-section" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+            <textarea id="aiInput" style="width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-bottom: 10px;" placeholder="Paste invoice details in natural language, e.g.:
+Adithya Joshi, 7715097951, ds.newb.66@gmail.com
+Expert: Ajay Shenoy, Amount: 37500, Date: 04/01/2026"></textarea>
+            <button class="btn btn-primary" id="aiBtn" onclick="parseWithAI()" style="margin-bottom: 10px;">Parse with AI</button>
+            <span id="aiLoading" style="display: none; margin-left: 10px; color: #666;">Parsing...</span>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Expert Name</label>
+                <input type="text" id="inputExpertName" value="Ajay Shenoy">
+            </div>
+            <div class="form-group">
+                <label>Expert Profile URL</label>
+                <input type="text" id="inputExpertLink" value="https://topmate.io/ajay_shenoy">
+            </div>
+            <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" id="inputBilledName" value="Adithya Joshi">
+            </div>
+            <div class="form-group">
+                <label>Customer Email</label>
+                <input type="email" id="inputBilledEmail" value="ds.newb.66@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>Customer Phone</label>
+                <input type="text" id="inputBilledPhone" value="7715097951">
+            </div>
+            <div class="form-group">
+                <label>Invoice Date</label>
+                <input type="date" id="inputDate" value="2026-01-04">
+            </div>
+            <div class="form-group full-width">
+                <label>Invoice Number <span style="font-weight: normal; color: #999;">(Format: 0000x/MMYYYY/AS-TOPM)</span></label>
+                <input type="text" id="inputInvoiceNumber" value="00001/012026/AS-TOPM" placeholder="00001/012026/AS-TOPM">
+            </div>
+            <div class="form-group full-width">
+                <label>Service/Item Name</label>
+                <input type="text" id="inputItemName" value="Building Agents in Enterprise - February Cohort">
+            </div>
+            <div class="form-group">
+                <label>Currency</label>
+                <select id="inputCurrency" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 14px; background: #fff;">
+                    <option value="INR" selected>INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="SGD">SGD (S$)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="inputAmount" value="37500">
+            </div>
+            <div class="form-group">
+                <label>Discount</label>
+                <input type="number" id="inputDiscount" value="0">
+            </div>
+        </div>
+        <div class="generator-buttons">
+            <button class="btn btn-primary" onclick="generateInvoice()">Update Invoice</button>
+            <button class="btn btn-secondary" onclick="downloadPDF()">Download as PDF</button>
+        </div>
+    </div>
+
+    <div class="invoice-container" id="invoiceContainer">
+        <h1>RECEIPT</h1>
+
+        <div class="header-section">
+            <div class="expert-name" id="expertName">Ajay Shenoy</div>
+            <a href="https://topmate.io/ajay_shenoy" class="expert-link" id="expertLink">https://topmate.io/ajay_shenoy</a>
+        </div>
+
+        <div class="billed-section">
+            <div class="billed-label">Billed to</div>
+            <div class="billed-name" id="billedName">Adithya Joshi</div>
+            <div class="billed-email" id="billedEmail">ds.newb.66@gmail.com</div>
+            <div class="billed-phone" id="billedPhone">7715097951</div>
+        </div>
+
+        <div class="logo-container">
+            <img class="logo-img" src="https://res.cloudinary.com/topmate/image/upload/v1767527779/logo-topmate_ljeuh7.png" alt="Topmate">
+        </div>
+
+        <div class="invoice-details">
+            <div class="invoice-label">Invoice number</div>
+            <div class="invoice-value" id="invoiceNumber">00001/012026/AS-TOPM</div>
+
+            <div class="invoice-label">Invoice date</div>
+            <div class="invoice-value" id="invoiceDate">2026-01-04</div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM DETAIL</th>
+                    <th>QTY</th>
+                    <th>RATE</th>
+                    <th>DISCOUNT</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="item-name" id="itemName">Building Agents in Enterprise - February Cohort</td>
+                    <td id="itemQty">1</td>
+                    <td id="itemRate">INR 37500.0</td>
+                    <td id="itemDiscount">INR 0.0</td>
+                    <td id="itemAmount">INR 37500.0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="totals-section">
+            <div class="total-row">
+                <div class="total-label">Subtotal</div>
+                <div class="total-value" id="subtotal">INR 37500.0</div>
+            </div>
+            <div class="total-row grand-total">
+                <div class="total-label">Grand Total (Incl.Tax)</div>
+                <div class="total-value" id="grandTotal">INR 37500.0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function parseWithAI() {
+            const input = document.getElementById('aiInput').value.trim();
+            if (!input) {
+                alert('Please enter invoice details');
+                return;
+            }
+
+            const btn = document.getElementById('aiBtn');
+            const loading = document.getElementById('aiLoading');
+
+            btn.disabled = true;
+            loading.style.display = 'inline';
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Fill form fields with parsed data
+                if (data.expertName) document.getElementById('inputExpertName').value = data.expertName;
+                if (data.expertLink) document.getElementById('inputExpertLink').value = data.expertLink;
+                if (data.billedName) document.getElementById('inputBilledName').value = data.billedName;
+                if (data.billedEmail) document.getElementById('inputBilledEmail').value = data.billedEmail;
+                if (data.billedPhone) document.getElementById('inputBilledPhone').value = data.billedPhone;
+                if (data.date) document.getElementById('inputDate').value = data.date;
+                if (data.itemName) document.getElementById('inputItemName').value = data.itemName;
+                if (data.amount) document.getElementById('inputAmount').value = data.amount;
+                if (data.discount !== undefined) document.getElementById('inputDiscount').value = data.discount;
+
+                // Update invoice display
+                generateInvoice();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error parsing invoice: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function generateInvoice() {
+            // Get form values
+            const expertName = document.getElementById('inputExpertName').value;
+            const expertLink = document.getElementById('inputExpertLink').value;
+            const billedName = document.getElementById('inputBilledName').value;
+            const billedEmail = document.getElementById('inputBilledEmail').value;
+            const billedPhone = document.getElementById('inputBilledPhone').value;
+            const date = document.getElementById('inputDate').value;
+            const invoiceNumber = document.getElementById('inputInvoiceNumber').value;
+            const itemName = document.getElementById('inputItemName').value;
+            const currency = document.getElementById('inputCurrency').value;
+            const amount = parseFloat(document.getElementById('inputAmount').value) || 0;
+            const discount = parseFloat(document.getElementById('inputDiscount').value) || 0;
+
+            // Update invoice display
+            document.getElementById('expertName').textContent = expertName;
+            const linkEl = document.getElementById('expertLink');
+            linkEl.href = expertLink;
+            linkEl.textContent = expertLink;
+
+            document.getElementById('billedName').textContent = billedName;
+            document.getElementById('billedEmail').textContent = billedEmail;
+            document.getElementById('billedPhone').textContent = billedPhone;
+
+            document.getElementById('invoiceDate').textContent = date;
+            document.getElementById('invoiceNumber').textContent = invoiceNumber;
+
+            document.getElementById('itemName').textContent = itemName;
+
+            const finalAmount = amount - discount;
+            document.getElementById('itemRate').textContent = `${currency} ${amount.toFixed(1)}`;
+            document.getElementById('itemDiscount').textContent = `${currency} ${discount.toFixed(1)}`;
+            document.getElementById('itemAmount').textContent = `${currency} ${finalAmount.toFixed(1)}`;
+            document.getElementById('subtotal').textContent = `${currency} ${finalAmount.toFixed(1)}`;
+            document.getElementById('grandTotal').textContent = `${currency} ${finalAmount.toFixed(1)}`;
+        }
+
+        function downloadPDF() {
+            window.print();
+        }
+
+        // Initialize invoice on load
+        generateInvoice();
+    </script>
+</body>
+</html>
