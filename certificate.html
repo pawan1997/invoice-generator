@@ -765,7 +765,7 @@
             html, body {
                 margin: 0;
                 padding: 0;
-                background: #fff;
+                background: #fff !important;
                 overflow: hidden;
                 width: 297mm;
                 height: 210mm;
@@ -787,30 +787,44 @@
             }
 
             .certificate-container {
-                box-shadow: none;
+                box-shadow: none !important;
                 width: 287mm;
                 height: 200mm;
                 margin: 0 auto;
                 page-break-inside: avoid;
                 break-inside: avoid;
                 transform: none;
+                background: #faf8f3 !important;
+            }
+
+            /* Simplify background for faster rendering */
+            .cert-bg-pattern {
+                display: none !important;
             }
 
             .cert-content {
                 padding: 40px 60px;
             }
 
+            /* Use system fonts as fallback for faster PDF rendering */
             .cert-title {
                 font-size: 46px;
                 letter-spacing: 5px;
+                font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif !important;
             }
 
             .cert-recipient {
                 font-size: 44px;
+                font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif !important;
             }
 
             .cert-course {
                 font-size: 22px;
+                font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif !important;
+            }
+
+            .cert-signature-typed {
+                font-family: 'Great Vibes', cursive, 'Brush Script MT', cursive !important;
             }
 
             .cert-logo-section {
@@ -819,6 +833,17 @@
 
             .cert-logo {
                 height: 52px;
+            }
+
+            /* Ensure borders render */
+            .cert-border-outer,
+            .cert-border-inner {
+                border-color: #c9a962 !important;
+            }
+
+            /* Ensure stamp renders */
+            .cert-stamp-img {
+                opacity: 1 !important;
             }
         }
 
